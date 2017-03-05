@@ -16,7 +16,7 @@ docker build -t sendy
 # Getting it running
 To run apache in a background process, simply start the container using the following command  (example):
 ```
-docker run -p 8080:80 -d sendy -e MYSQL_ROOT_PASSWORD=my_root_passwd -e MYSQL_DATABASE=my_sendy_db -e MYSQL_PORT=my_sendy_port -e SENDY_PATH=sendy.my_domain.com
+docker run -p 8080:80 -d sendy -e MYSQL_ROOT_PASSWORD=my_root_passwd -e MYSQL_DATABASE=my_sendy_db -e MYSQL_PORT=my_sendy_port -e SENDY_PATH=http://sendy.my_domain.com
 ```
 
 -p 8080:80 publishes port 80 in the container to 8080 on the host machine.
@@ -24,7 +24,7 @@ docker run -p 8080:80 -d sendy -e MYSQL_ROOT_PASSWORD=my_root_passwd -e MYSQL_DA
 -e add the environment variables to allow Sendy to connect to the MySQL DB
 
 # Docker compose
-Here is an exemple of a docker-compose file that will get you running in minutes
+Here is an example of a docker-compose file that will get you running in minutes
 
 ```
   mysql-sendy:
@@ -53,7 +53,7 @@ Here is an exemple of a docker-compose file that will get you running in minutes
 To launch it simply replace the env variables and run :
 docker-compose up
 
-Send will be running on http://238238736_sendy.my_domain.com on this example
+Send will be running on http://sendy.my_domain.com on this example
 
 And if you want to include it in your web application to be able to use Sendy 's API you'll just have to add this line to your web module, then your app will be able to request the API at http://sendy 
 
