@@ -73,32 +73,37 @@ Since ECS doesn't support build you'll have to build the image and host it somew
 
 # Local use
 I know how annoying it can be to not be able to test Sendy in local and the provided official solution sucks when your IP is dynamic so here is what I've done.
-1. Modify you docker compose
-```
-  sendy:
-    build: .
-    ports:
-      - 9014:80
-    links:
-      - mysql-sendy:mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: my_passwd
-      MYSQL_DATABASE: sendy_db
-      MYSQL_PORT : 3306
-      SENDY_PATH : http://238238736_sendy.my_domain.com
-```
 
-Sendy should run on port 9014 but if you set the path to SENDY_PATH : localhost:9014 it won't work because it won't recognize the domain you bought
-2. Install local tunnel :
-https://github.com/localtunnel/localtunnel
-3. run local tunnel with a predefined subdomain (choose something random)
-```
-    lt --port 9014 --subdomain 238238736_sendy
-```
-4. Add a CNAME record on the domain you bought Send for
-```
-    CNAME 238238736_sendy.my_domain.com 238238736_sendy.localtunnel.me
-```
-5. Go to 238238736_sendy.my_domain.com, you can now test locally without having to check your IP and modify your A record all the time.
+1. Modify you docker compose
+    ```
+      sendy:
+        build: .
+        ports:
+          - 9014:80
+        links:
+          - mysql-sendy:mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: my_passwd
+          MYSQL_DATABASE: sendy_db
+          MYSQL_PORT : 3306
+          SENDY_PATH : http://238238736_sendy.my_domain.com
+    ```
+
+    Sendy should run on port 9014 but if you set the path to SENDY_PATH : localhost:9014 it won't work because it won't recognize the domain you bought
+
+1. Install local tunnel :
+    https://github.com/localtunnel/localtunnel
+    
+1. run local tunnel with a predefined subdomain (choose something random)
+    ```
+        lt --port 9014 --subdomain 238238736_sendy
+    ```
+    
+1. Add a CNAME record on the domain you bought Send for
+    ```
+        CNAME 238238736_sendy.my_domain.com 238238736_sendy.localtunnel.me
+    ```
+
+1. Go to 238238736_sendy.my_domain.com, you can now test locally without having to check your IP and modify your A record all the time.
 
 If you have more than one developer make the SENDY_PATH a variable on your machine and add as many CNAME records as you have developers.
