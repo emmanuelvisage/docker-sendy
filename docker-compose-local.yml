@@ -1,0 +1,23 @@
+version: '2'
+services:
+  mysql-sendy:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - /var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my_passwd
+      MYSQL_DATABASE: sendy_db
+  sendy:
+    build: .
+    ports:
+      - 9014:80
+    links:
+      - mysql-sendy:mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: my_passwd
+      MYSQL_DATABASE: sendy_db
+      MYSQL_PORT : 3306
+      SENDY_PATH : http://273293942_sendy.my_domain.com

@@ -1,0 +1,1 @@
+*/1 * * * * php /var/www/site/autoresponders.php >> /var/log/cron.log 2>&1

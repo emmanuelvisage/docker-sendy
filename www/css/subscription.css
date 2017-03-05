@@ -1,0 +1,120 @@
+body{
+	background: #ffffff;
+	font-family: Helvetica, Arial;
+}
+#wrapper 
+{
+	background: #f2f2f2;
+	width: 300px;
+	padding: 0 0 10px 0;
+	margin: 0 0 0 -150px;
+	position: absolute;
+	left: 50%;
+	top: 10%;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+form, p{
+	text-align: center;
+	font-size: 12px;
+	line-height: 18px;
+}
+form{
+	width: 305px;
+	margin: 0 auto;
+	position: relative;
+	left: 15px;
+}
+form div{
+	float: left;
+	margin-bottom: 10px;
+}
+label{
+	width: 65px;
+	padding: 4px 10px 0 0;
+	float: left;
+	text-align: right;
+}
+form div input{
+	width: 170px;
+	height: 20px;
+	float: right;
+}
+form div input:focus{
+	outline: none;
+}
+#wrapper img{
+	width: 16px;
+	margin-right: 5px;
+}
+#brand h1{
+	font-size: 14px;
+	font-weight: normal;
+}
+h2{
+	font-weight: normal;
+	text-align: center;
+	padding: 0 10px;
+}
+a{
+	color: #000;
+}
+a:hover{
+	text-decoration: none;
+}
+#submit{
+	clear: both;
+	float: right;
+	margin-bottom: 15px;
+	position: relative;
+	left: -52px;
+	
+	background: white;
+	padding: 5px 10px;
+	border: 1px solid #e2e2e2;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	box-shadow: none;
+	cursor: pointer;
+	text-decoration: none;
+}
+#submit:hover {
+  color: #333333;
+  text-decoration: none;
+  background-color: #f4f4f4;
+  *background-color: #d9d9d9;
+  /* Buttons in IE7 don't get borders, so darken on hover */
+
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+  -moz-transition: background-position 0.1s linear;
+  -ms-transition: background-position 0.1s linear;
+  -o-transition: background-position 0.1s linear;
+  transition: background-position 0.1s linear;
+}
+#submit:active {
+  background-color: #e6e6e6;
+  background-color: #d9d9d9 \9;
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+  -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+}
+.separator{
+	clear: both;
+	height: 5px;
+	background: url("../img/top-pattern.gif") repeat-x 0 0;
+	background-size: 46px;
+	margin: -8px -8px 0 -8px;
+}
+
+/* Responsive */
+
+@media screen and (max-width: 450px) {
+	form div input{
+		width: 160px;
+	}
+}
