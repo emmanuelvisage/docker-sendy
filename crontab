@@ -1,1 +1,1 @@
-*/1 * * * * php /var/www/site/autoresponders.php >> /var/log/cron.log 2>&1
+*/1 * * * * root . /root/project_env.sh; php /var/www/site/autoresponders.php >> /var/log/cron.log 2>&1

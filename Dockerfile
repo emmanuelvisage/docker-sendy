@@ -20,6 +20,7 @@ ENV APACHE_LOG_DIR /var/log/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
 ENV APACHE_PID_FILE /var/run/apache2.pid
 
+
 # Expose apache.
 EXPOSE 80
 
@@ -41,4 +42,4 @@ RUN touch /var/log/cron.log
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
-CMD cron && /usr/sbin/apache2ctl -D FOREGROUND
+CMD printenv | sed 's/^\(.*\)$/export \1/g' | grep -E "^export SENDY|^export MYSQL" > /root/project_env.sh && cron && /usr/sbin/apache2ctl -D FOREGROUND
