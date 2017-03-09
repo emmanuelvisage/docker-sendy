@@ -41,5 +41,8 @@ RUN touch /var/log/cron.log
 # Update the default apache site with the config we created.
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
+# Apache gets grumpy about PID files pre-existing
+RUN rm -f /var/run/apache2/apache2.pid
+
 # By default start up apache in the foreground, override with /bin/bash for interative.
 CMD printenv | sed 's/^\(.*\)$/export \1/g' | grep -E "^export SENDY|^export MYSQL" > /root/project_env.sh && cron && /usr/sbin/apache2ctl -D FOREGROUND
