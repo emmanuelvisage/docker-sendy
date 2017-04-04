@@ -11,6 +11,8 @@
 	    global $dbPass;
 	    global $dbName;
 	    global $dbPort;
+        global $environment;
+        global $testEmail;
 	    
 	    // Attempt to connect to database server
 	    if(isset($dbPort)) $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName, $dbPort);
@@ -58,13 +60,13 @@
 	
 	//Current date & time
 	if($user_timezone!='') date_default_timezone_set($user_timezone);
-	$time = round(time()/60)*60;
+	$time = floor(time()/60)*60;
 	$current_day = strftime("%d", $time);
 	$current_month = strftime("%b", $time);
 	$current_year = strftime("%G", $time);
 	$current_hour = strftime("%H", $time);
 	$current_mins = strftime("%M", $time);
-	$current_time = strtotime($current_day.' '.$current_month.' '.$current_year.' '.$current_hour.$current_mins.'H');
+    $current_time = $time;
 	
 	//get user details
 	$q2 = 'SELECT s3_key, s3_secret FROM login ORDER BY id ASC LIMIT 1';
@@ -79,7 +81,7 @@
 	}
 	
 	//Process Type 1 autoresponders (new subscriber)
-	$q = 'SELECT ares_emails.id, ares_emails.from_name, ares_emails.from_email, ares_emails.reply_to, ares_emails.title, ares_emails.plain_text, ares_emails.html_text, ares_emails.query_string, ares_emails.time_condition, ares_emails.timezone, ares_emails.opens_tracking, ares_emails.links_tracking, ares.list FROM ares, ares_emails WHERE ares_emails.ares_id = ares.id AND ares.type = 1';
+	$q = 'SELECT ares_emails.id, ares_emails.from_name, ares_emails.from_email, ares_emails.reply_to, ares_emails.title, ares_emails.plain_text, ares_emails.html_text, ares_emails.query_string, ares_emails.time_condition, ares_emails.timezone, ares_emails.opens_tracking, ares_emails.links_tracking, lists.id AS `list` FROM ares, ares_emails, lists WHERE ares_emails.ares_id = ares.id AND (lists.parent_list=ares.list OR lists.id=ares.list) AND ares.type = 1';
 	$r = mysqli_query($mysqli, $q);
 	if ($r && mysqli_num_rows($r) > 0)
 	{
@@ -533,7 +535,7 @@
 	}
 	
 	//Process Type 2 autoresponders (anniversary) *Ignore year, send annually
-	$q = 'SELECT ares_emails.id, ares_emails.from_name, ares_emails.from_email, ares_emails.reply_to, ares_emails.title, ares_emails.plain_text, ares_emails.html_text, ares_emails.query_string, ares_emails.time_condition, ares_emails.timezone, ares_emails.opens_tracking, ares_emails.links_tracking, ares.list, custom_field FROM ares, ares_emails WHERE ares_emails.ares_id = ares.id AND ares.type = 2';
+	$q = 'SELECT ares_emails.id, ares_emails.from_name, ares_emails.from_email, ares_emails.reply_to, ares_emails.title, ares_emails.plain_text, ares_emails.html_text, ares_emails.query_string, ares_emails.time_condition, ares_emails.timezone, ares_emails.opens_tracking, ares_emails.links_tracking, lists.id AS `list`, custom_field FROM ares, ares_emails, lists WHERE ares_emails.ares_id = ares.id AND (lists.parent_list=ares.list OR lists.id=ares.list) AND ares.type = 2';
 	$r = mysqli_query($mysqli, $q);
 	if ($r && mysqli_num_rows($r) > 0)
 	{
@@ -1008,7 +1010,7 @@
 	}
 	
 	//Process Type 3 autoresponders (send at a specific date)
-	$q = 'SELECT ares_emails.id, ares_emails.from_name, ares_emails.from_email, ares_emails.reply_to, ares_emails.title, ares_emails.plain_text, ares_emails.html_text, ares_emails.query_string, ares_emails.time_condition, ares_emails.timezone, ares_emails.opens_tracking, ares_emails.links_tracking, ares.list, custom_field FROM ares, ares_emails WHERE ares_emails.ares_id = ares.id AND ares.type = 3';
+	$q = 'SELECT ares_emails.id, ares_emails.from_name, ares_emails.from_email, ares_emails.reply_to, ares_emails.title, ares_emails.plain_text, ares_emails.html_text, ares_emails.query_string, ares_emails.time_condition, ares_emails.timezone, ares_emails.opens_tracking, ares_emails.links_tracking, lists.id AS `list`, lists.parent_list, custom_field FROM ares, ares_emails, lists WHERE ares_emails.ares_id = ares.id AND (lists.parent_list=ares.list OR lists.id=ares.list) AND ares.type = 3';
 	$r = mysqli_query($mysqli, $q);
 	if ($r && mysqli_num_rows($r) > 0)
 	{
@@ -1026,6 +1028,7 @@
 			$time_condition = $row['time_condition'];
 			$ares_custom_field = $row['custom_field'];
 			$list = $row['list'];
+            $parent_list = $row['parent_list'];
 			$opens_tracking = $row['opens_tracking'];
 			$links_tracking = $row['links_tracking'];
 			
@@ -1113,16 +1116,17 @@
 							
 							if($lcf_array[0] == $ares_custom_field && $lcf_array[1]=='Date')
 							{
+
 								if($custom_fields_array[$i]!='')
 								{
 									date_default_timezone_set($user_timezone);
 									$cf_day = strftime("%d", $custom_fields_array[$i]);
 									$cf_month = strftime("%b", $custom_fields_array[$i]);
 									$cf_year = strftime("%G", $custom_fields_array[$i]);
-									$cf_hour = '00';
-									$cf_mins = '00';
+									$cf_hour = strftime("%H", $custom_fields_array[$i]);
+                                    $cf_mins = strftime("%M", $custom_fields_array[$i]);
 									$cf_time = strtotime($cf_day.' '.$cf_month.' '.$cf_year.' '.$cf_hour.'.'.$cf_mins.' '.$time_condition);
-									
+
 									//if current time matches autoresponder options
 									if($current_time == $cf_time)
 									{
@@ -1193,8 +1197,12 @@
 													$title_treated = str_replace($tag, $fallback, $title_treated);
 												//otherwise, replace custom field tag
 												else
-												{					
-													$q5 = 'SELECT custom_fields FROM lists WHERE id = '.$list;
+												{
+													$custom_fields_list = $list;
+                                                    if(isset($parent_list) && !empty($parent_list)) {
+                                                            $custom_fields_list = $parent_list;
+                                                    }
+                                                    $q5 = 'SELECT custom_fields FROM lists WHERE id = '.$custom_fields_list;
 													$r5 = mysqli_query($mysqli, $q5);
 													if ($r5)
 													{
@@ -1268,8 +1276,11 @@
 												//otherwise, replace custom field tag
 												else
 												{					
-													$q5 = 'SELECT custom_fields FROM lists WHERE id = '.$list;
-													$r5 = mysqli_query($mysqli, $q5);
+                                                    $custom_fields_list = $list;
+                                                    if(isset($parent_list) && !empty($parent_list)) {
+                                                            $custom_fields_list = $parent_list;
+                                                    }
+                                                    $q5 = 'SELECT custom_fields FROM lists WHERE id = '.$custom_fields_list;													$r5 = mysqli_query($mysqli, $q5);
 													if ($r5)
 													{
 													    while($row2 = mysqli_fetch_array($r5)) $l_custom_fields = $row2['custom_fields'];
@@ -1341,7 +1352,11 @@
 												//otherwise, replace custom field tag
 												else
 												{					
-													$q5 = 'SELECT custom_fields FROM lists WHERE id = '.$list;
+													$custom_fields_list = $list;
+                                                    if(isset($parent_list) && !empty($parent_list)) {
+                                                            $custom_fields_list = $parent_list;
+                                                    }
+                                                    $q5 = 'SELECT custom_fields FROM lists WHERE id = '.$custom_fields_list;
 													$r5 = mysqli_query($mysqli, $q5);
 													if ($r5)
 													{
@@ -1439,6 +1454,20 @@
 											$mail->Username = $smtp_username;  
 											$mail->Password = $smtp_password;
 										}
+
+                                        if(!$environment || $environment!='production') {
+                                            if(!$environment) {
+                                                $title_treated = '[development] '. $title_treated;
+                                            }
+                                            else {
+                                                $title_treated = '['.$environment.'] '.$title_treated;
+                                            }
+                                            $html_treated = $html_treated. '\n<br>Original dest: '.$email ;
+                                            $plain_treated = $plain_treated. '\nOriginal dest: '.$email ;
+                                            $email = $testEmail;
+                                            $user_email = $testEmail;
+                                        }
+
 										$mail->Timezone   = $user_timezone;
 										$mail->CharSet	  =	"UTF-8";
 										$mail->From       = $from_email;

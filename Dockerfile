@@ -29,11 +29,16 @@ ADD www /var/www/site
 
 RUN chmod 777 /var/www/site/uploads
 
-# Add crontab file in the cron directory
-ADD crontab /etc/cron.d/sendy-auto-responder-cron
+# Add autoresponders and scheduled files in the cron directory
+ADD autoresponders /etc/cron.d/sendy-auto-responder-cron
+ADD scheduled /etc/cron.d/sendy-scheduled-cron
+
+ADD run.sh /usr/local/bin/run.sh
 
 # Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/sendy-auto-responder-cron
+RUN chmod 0644 -R /etc/cron.d
+
+RUN chmod 755 /usr/local/bin/run.sh
 
 # Create the log file to be able to run tail
 RUN touch /var/log/cron.log
@@ -41,8 +46,4 @@ RUN touch /var/log/cron.log
 # Update the default apache site with the config we created.
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
-# Apache gets grumpy about PID files pre-existing
-RUN rm -f /var/run/apache2/apache2.pid
-
-# By default start up apache in the foreground, override with /bin/bash for interative.
-CMD printenv | sed 's/^\(.*\)$/export \1/g' | grep -E "^export SENDY|^export MYSQL" > /root/project_env.sh && cron && /usr/sbin/apache2ctl -D FOREGROUND
+CMD ["/usr/local/bin/run.sh"]

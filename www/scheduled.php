@@ -3,6 +3,9 @@
 <?php include('includes/helpers/integrations/zapier/triggers/functions.php');?>
 <?php 
 	include('includes/config.php');
+    if(!$environment && !testEmail) {
+        print 'env variable SENDY_ENV is not defined';
+    }
 	//--------------------------------------------------------------//
 	function dbConnect() { //Connect to database
 	//--------------------------------------------------------------//
@@ -13,6 +16,8 @@
 	    global $dbPass;
 	    global $dbName;
 	    global $dbPort;
+	    global $environment;
+	    global $testEmail;
 	    
 	    // Attempt to connect to database server
 	    if(isset($dbPort)) $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName, $dbPort);
@@ -64,7 +69,7 @@
 	$offset = isset($_GET['offset']) ? $_GET['offset'] : '';
 	
 	//Check campaigns database
-	$q = 'SELECT timezone, sent, id, app, userID, to_send, to_send_lists, recipients, timeout_check, send_date, lists, from_name, from_email, reply_to, title, label, plain_text, html_text, query_string, opens_tracking, links_tracking FROM campaigns WHERE (send_date !="" AND lists !="" AND timezone != "") OR (to_send > recipients) ORDER BY sent DESC';
+	$q = 'SELECT timezone, sent, id, app, userID, to_send, to_send_lists, recipients, timeout_check, send_date, lists, from_name, from_email, reply_to, title, label, plain_text, html_text, query_string, opens_tracking, links_tracking, custom_fields FROM campaigns WHERE (send_date !="" AND lists !="" AND timezone != "") OR (to_send > recipients) ORDER BY sent DESC';
 	$r = mysqli_query($mysqli, $q);
 	if ($r && mysqli_num_rows($r) > 0)
 	{
@@ -94,6 +99,15 @@
 			$to_send_lists = $row['to_send_lists'];
 			$opens_tracking = $row['opens_tracking'];
 			$links_tracking = $row['links_tracking'];
+			$extra_custom_fields_and_values = $row['custom_fields'];
+			$extra_custom_fields_and_values_array = explode('%s%',$extra_custom_fields_and_values );
+			$extra_custom_fields = array();
+			$extra_custom_values = array();
+			foreach($extra_custom_fields_and_values_array as $extra_custom_field_and_value) {
+			    list($field,$value) = explode('|', $extra_custom_field_and_value);
+			    $extra_custom_fields[] = $field;
+			    $extra_custom_values[] = $value;
+			}
 			
 			//Set language
 			$q_l = 'SELECT login.language FROM campaigns, login WHERE campaigns.id = '.$campaign_id.' AND login.app = campaigns.app';
@@ -296,8 +310,8 @@
 									if ($r5)
 									{
 									    while($row2 = mysqli_fetch_array($r5)) $custom_fields = $row2['custom_fields'];
-									    $custom_fields_array = explode('%s%', $custom_fields);
-									    $custom_values_array = explode('%s%', $custom_values);
+                                        $custom_fields_array = array_merge($extra_custom_fields, explode('%s%', $custom_fields));
+                                        $custom_values_array = array_merge($extra_custom_values, explode('%s%', $custom_values));
 									    $cf_count = count($custom_fields_array);
 									    $k = 0;
 									    
@@ -316,7 +330,7 @@
 										    	else
 										    	{
 										    		//if custom field is of 'Date' type, format the date
-										    		if($cf_array[1]=='Date')
+										    		if(isset($cf_array[1]) && $cf_array[1]=='Date')
 											    		$title_treated = str_replace($tag, strftime("%a, %b %d, %Y", $custom_values_array[$j]), $title_treated);
 										    		//otherwise just replace tag with custom field value
 										    		else
@@ -370,8 +384,8 @@
 									if ($r5)
 									{
 									    while($row2 = mysqli_fetch_array($r5)) $custom_fields = $row2['custom_fields'];
-									    $custom_fields_array = explode('%s%', $custom_fields);
-									    $custom_values_array = explode('%s%', $custom_values);
+                                        $custom_fields_array = array_merge($extra_custom_fields, explode('%s%', $custom_fields));
+                                        $custom_values_array = array_merge($extra_custom_values, explode('%s%', $custom_values));
 									    $cf_count = count($custom_fields_array);
 									    $k = 0;
 									    
@@ -390,7 +404,7 @@
 										    	else
 										    	{
 										    		//if custom field is of 'Date' type, format the date
-										    		if($cf_array[1]=='Date')
+										    		if(isset($cf_array[1]) && $cf_array[1]=='Date')
 											    		$html_treated = str_replace($tag, strftime("%a, %b %d, %Y", $custom_values_array[$j]), $html_treated);
 										    		//otherwise just replace tag with custom field value
 										    		else
@@ -443,8 +457,8 @@
 									if ($r5)
 									{
 									    while($row2 = mysqli_fetch_array($r5)) $custom_fields = $row2['custom_fields'];
-									    $custom_fields_array = explode('%s%', $custom_fields);
-									    $custom_values_array = explode('%s%', $custom_values);
+                                        $custom_fields_array = array_merge($extra_custom_fields, explode('%s%', $custom_fields));
+                                        $custom_values_array = array_merge($extra_custom_values, explode('%s%', $custom_values));
 									    $cf_count = count($custom_fields_array);
 									    $k = 0;
 									    
@@ -463,7 +477,7 @@
 										    	else
 										    	{
 										    		//if custom field is of 'Date' type, format the date
-										    		if($cf_array[1]=='Date')
+										    		if(isset($cf_array[1]) && $cf_array[1]=='Date')
 														$plain_treated = str_replace($tag, strftime("%a, %b %d, %Y", $custom_values_array[$j]), $plain_treated);
 										    		//otherwise just replace tag with custom field value
 										    		else
@@ -545,6 +559,20 @@
 							$mail->Username = $smtp_username;  
 							$mail->Password = $smtp_password;
 						}
+
+                        if(!$environment || $environment!='production') {
+                            if(!$environment) {
+                                $title_treated = '[development] '. $title_treated;
+                            }
+                            else {
+                                $title_treated = '['.$environment.'] '.$title_treated;
+                            }
+                            $html_treated = $html_treated. '\n<br>Original dest: '.$email ;
+                            $plain_treated = $plain_treated. '\nOriginal dest: '.$email ;
+                            $email = $testEmail;
+                            $user_email = $testEmail;
+                        }
+
 						$mail->Timezone   = $user_timezone;
 						$mail->CharSet	  =	"UTF-8";
 						$mail->From       = $from_email;
@@ -807,6 +835,19 @@
 						$mail2->Username = $smtp_username;  
 						$mail2->Password = $smtp_password;
 					}
+					if(!$environment || $environment!='production') {
+                        if(!$environment) {
+                            $title_to_me = '[development] '. $title_to_me;
+                        }
+                        else {
+                            $title_to_me = '['.$environment.'] '.$title_to_me;
+                        }
+                        $message_to_me_html = $message_to_me_html. '\n<br>Original dest: '.$from_email.'\n<br>Original Bcc: '.$user_email ;
+                        $message_to_me_plain = $message_to_me_plain. '\nOriginal dest: '.$from_email.'\nOriginal Bcc: '.$user_email ;
+                        $from_email = $testEmail;
+                        $user_email = $testEmail;
+					}
+
 					$mail2->Timezone   = $user_timezone;
 					$mail2->CharSet	  =	"UTF-8";
 					$mail2->From       = $from_email;

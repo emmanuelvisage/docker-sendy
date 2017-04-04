@@ -218,9 +218,14 @@
 							//if custom field format is Date
 							if($cf_fields_array[1]=='Date')
 							{
-								$date_value1 = strtotime($value);
-								$date_value2 = strftime("%b %d, %Y 12am", $date_value1);
-								$value = strtotime($date_value2);
+							    $date_from_string = strtotime($value);
+                                $date_from_timestamp = filter_var($value, FILTER_VALIDATE_INT);
+							    if($date_value1) {
+							        $value = $date_value1;
+							    }
+							    else if($date_from_timestamp !==false) {
+							        $value = $date_from_timestamp;
+							    }
 								$cf_value .= $value;
 							}
 							//else if custom field format is Text

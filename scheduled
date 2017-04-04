@@ -1,0 +1,1 @@
+*/5 * * * * root . /root/project_env.sh; php /var/www/site/scheduled.php >> /var/log/cron.log 2>&1
