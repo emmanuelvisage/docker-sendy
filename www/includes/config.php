@@ -7,7 +7,7 @@
 	define('APP_PATH', getenv('SENDY_PATH'));
 	
 	/*  MySQL database connection credentials (please place values between the apostrophes) */
-	$dbHost = 'mysql-sendy'; //MySQL Hostname
+	$dbHost = 'mysql'; //MySQL Hostname
 	$dbUser = 'root'; //MySQL Username
 	$dbPass = getenv('MYSQL_ROOT_PASSWORD'); //MySQL Password
 	$dbName = getenv('MYSQL_DATABASE'); //MySQL Database Name
