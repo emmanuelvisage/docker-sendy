@@ -605,6 +605,11 @@
 							$q14 = 'UPDATE subscribers SET last_campaign = '.$campaign_id.' WHERE id = '.$subscriber_id;
 							mysqli_query($mysqli, $q14);
 						}
+
+                        if(!$environment || $environment!='production') {
+                            //send just one if not in production
+                            break;
+                        }
 				    }  
 				    
 				    //====================== Send remaining in queue ======================//
