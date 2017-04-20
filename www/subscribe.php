@@ -164,21 +164,12 @@
 					//if custom field matches POST data but IS NOT name, email, list or submit
 					if(str_replace(' ', '', $cf_array[0])==$key && ($key!='name' && $key!='email' && $key!='list' && $key!='submit'))
 					{
-						//if custom field format is Date
-						if($cf_array[1]=='Date')
-						{
-							$date_value1 = strtotime($value);
-							$date_value2 = strftime("%b %d, %Y 12am", $date_value1);
-							$value = strtotime($date_value2);
-							$cf_vals .= $value;
-						}
-						//else if custom field format is Text
-						else
-							$cf_vals .= addslashes($value);
+						$cf_vals .= addslashes($value);
 					}
 				}
 				$cf_vals .= '%s%';
 			}
+			error_log($cf_vals);
 		}
 		
 		//check if user is in this list
