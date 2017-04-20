@@ -169,7 +169,6 @@
 				}
 				$cf_vals .= '%s%';
 			}
-			error_log($cf_vals);
 		}
 		
 		//check if user is in this list
