@@ -14,8 +14,6 @@
 
 	$environment = getenv('SENDY_ENV');
 	$testEmail = getenv('SENDY_LOCAL_EMAIL_TO') ?: 'test@visage.jobs';
-	error_log($testEmail);
-	
 	
 	//----------------------------------------------------------------------------------//	
 	//								  OPTIONAL SETTINGS

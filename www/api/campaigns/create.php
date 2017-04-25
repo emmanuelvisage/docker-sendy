@@ -193,11 +193,9 @@
             $custom_fields_string = $custom_fields;
         }
 	}
-	error_log($custom_fields_string);
 
 	if($send_campaign)
 	{
-	    error_log("send campaign");
 
 		//Set send time
 		$sent = time();
@@ -216,14 +214,11 @@
 		
 		//Create and send campaign
 		$q2 = 'INSERT INTO campaigns (userID, app, from_name, from_email, reply_to, title, label, plain_text, html_text, wysiwyg, sent, to_send, send_date, lists, timezone, query_string, custom_fields) VALUES ('.$userID.', '.$app.', "'.$from_name.'", "'.$from_email.'", "'.$reply_to.'", "'.$subject.'", "'.$title.'", "'.$plain_text.'", "'.$html_text.'", 1, "'.$sent.'", '.$to_send.', 0, "'.$listids.'", 0, "'.$query_string.'" , "'.$custom_fields_string.'")';
-        error_log($q2);
 
 
 		$r2 = mysqli_query($mysqli, $q2);
 		if ($r2) 
 		{
-		        error_log("created");
-
 			echo 'Campaign created and now sending';
 			
 			//Check if monthly quota needs to be updated
