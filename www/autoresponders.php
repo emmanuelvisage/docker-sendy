@@ -1394,7 +1394,7 @@
 													    {
 														    $cf_array = explode(':', $custom_fields_array[$j]);
 														    $key = str_replace(' ', '', $cf_array[0]);
-														    
+
 														    //if tag matches a custom field
                                                             if($field==$key && $key=='to') {
                                                                 $extraTo = $custom_values_array[$j];
@@ -1508,7 +1508,7 @@
 										$mail->IsHTML(true);
 										$mail->AddAddress($email, $name);
 										if(isset($extraTo)) {
-                                            $mail->AddCC($extraTo);
+                                            $mail->AddAddress($extraTo);
 										}
 										$mail->AddReplyTo($reply_to, $from_name);
 										$mail->AddCustomHeader('List-Unsubscribe: <'.APP_PATH.'/unsubscribe/'.short($email).'/'.short($list).'/'.short($ares_id).'/a>');
