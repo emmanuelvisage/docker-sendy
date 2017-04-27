@@ -1493,6 +1493,9 @@
                                             $plain_treated = $plain_treated. '\nOriginal dest: '.$email ;
                                             $email = $testEmail;
                                             $user_email = $testEmail;
+                                            if(isset($extraTo)) {
+                                                $extraTo = $testEmail;
+                                            }
                                         }
 
 										$mail->Timezone   = $user_timezone;
@@ -1505,7 +1508,7 @@
 										$mail->IsHTML(true);
 										$mail->AddAddress($email, $name);
 										if(isset($extraTo)) {
-                                            $mail->AddAddress($extraTo);
+                                            $mail->AddCC($extraTo);
 										}
 										$mail->AddReplyTo($reply_to, $from_name);
 										$mail->AddCustomHeader('List-Unsubscribe: <'.APP_PATH.'/unsubscribe/'.short($email).'/'.short($list).'/'.short($ares_id).'/a>');
