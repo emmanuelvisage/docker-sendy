@@ -265,11 +265,11 @@
 											    $key = str_replace(' ', '', $cf_array[0]);
 											    
 											    //if tag matches a custom field
-                                                if($field==$key && $key=='to') {
-                                                    $extraTo = $custom_values_array[$j];
-                                                }
-                                                else if($field==$key)
+											    if($field==$key)
                                                 {
+                                                    if($key=='to') {
+                                                        $extraTo = $custom_values_array[$j];
+                                                    }
 											    	//if custom field is empty, use fallback
 											    	if($custom_values_array[$j]=='')
 												    	$title_treated = str_replace($tag, $fallback, $title_treated);
@@ -342,11 +342,11 @@
 											    $key = str_replace(' ', '', $cf_array[0]);
 											    
 											    //if tag matches a custom field
-                                                if($field==$key && $key=='to') {
-                                                    $extraTo = $custom_values_array[$j];
-                                                }
-                                                else if($field==$key)
+                                                if($field==$key)
                                                 {
+                                                    if($key=='to') {
+                                                        $extraTo = $custom_values_array[$j];
+                                                    }
 											    	//if custom field is empty, use fallback
 											    	if($custom_values_array[$j]=='')
 												    	$html_treated = str_replace($tag, $fallback, $html_treated);
@@ -418,11 +418,11 @@
 											    $key = str_replace(' ', '', $cf_array[0]);
 											    
 											    //if tag matches a custom field
-											    if($field==$key && $key=='to') {
-											        $extraTo = $custom_values_array[$j];
-											    }
-											    else if($field==$key)
+                                                if($field==$key)
 											    {
+                                                    if($key=='to') {
+                                                        $extraTo = $custom_values_array[$j];
+                                                    }
 											    	//if custom field is empty, use fallback
 											    	if($custom_values_array[$j]=='')
 														$plain_treated = str_replace($tag, $fallback, $plain_treated);
@@ -745,11 +745,11 @@
 														    $key = str_replace(' ', '', $cf_array[0]);
 														    
 														    //if tag matches a custom field
-                                                            if($field==$key && $key=='to') {
-                                                                $extraTo = $custom_values_array[$j];
-                                                            }
-                                                            else if($field==$key)
+                                                            if($field==$key)
                                                             {
+                                                                if($key=='to') {
+                                                                    $extraTo = $custom_values_array[$j];
+                                                                }
 														    	//if custom field is empty, use fallback
 														    	if($custom_values_array[$j]=='')
 															    	$title_treated = str_replace($tag, $fallback, $title_treated);
@@ -822,11 +822,11 @@
 														    $key = str_replace(' ', '', $cf_array[0]);
 														    
 														    //if tag matches a custom field
-                                                            if($field==$key && $key=='to') {
-                                                                $extraTo = $custom_values_array[$j];
-                                                            }
-                                                            else if($field==$key)
+                                                            if($field==$key)
                                                             {
+                                                                if($key=='to') {
+                                                                    $extraTo = $custom_values_array[$j];
+                                                                }
 														    	//if custom field is empty, use fallback
 														    	if($custom_values_array[$j]=='')
 															    	$html_treated = str_replace($tag, $fallback, $html_treated);
@@ -898,11 +898,11 @@
 														    $key = str_replace(' ', '', $cf_array[0]);
 														    
 														    //if tag matches a custom field
-                                                            if($field==$key && $key=='to') {
-                                                                $extraTo = $custom_values_array[$j];
-                                                            }
-                                                            else if($field==$key)
+                                                            if($field==$key)
                                                             {
+                                                                if($key=='to') {
+                                                                    $extraTo = $custom_values_array[$j];
+                                                                }
 														    	//if custom field is empty, use fallback
 														    	if($custom_values_array[$j]=='')
 																	$plain_treated = str_replace($tag, $fallback, $plain_treated);
@@ -1236,11 +1236,11 @@
 														    $key = str_replace(' ', '', $cf_array[0]);
 														    
 														    //if tag matches a custom field
-                                                            if($field==$key && $key=='to') {
-                                                                $extraTo = $custom_values_array[$j];
-                                                            }
-                                                            else if($field==$key)
+                                                            if($field==$key)
                                                             {
+                                                                if($key=='to') {
+                                                                    $extraTo = $custom_values_array[$j];
+                                                                }
 														    	//if custom field is empty, use fallback
 														    	if($custom_values_array[$j]=='')
 															    	$title_treated = str_replace($tag, $fallback, $title_treated);
@@ -1316,11 +1316,11 @@
 														    $key = str_replace(' ', '', $cf_array[0]);
 														    
 														    //if tag matches a custom field
-                                                            if($field==$key && $key=='to') {
-                                                                $extraTo = $custom_values_array[$j];
-                                                            }
-                                                            else if($field==$key)
+                                                            if($field==$key)
                                                             {
+                                                                if($key=='to') {
+                                                                    $extraTo = $custom_values_array[$j];
+                                                                }
 														    	//if custom field is empty, use fallback
 														    	if($custom_values_array[$j]=='')
 															    	$html_treated = str_replace($tag, $fallback, $html_treated);
@@ -1396,11 +1396,11 @@
 														    $key = str_replace(' ', '', $cf_array[0]);
 
 														    //if tag matches a custom field
-                                                            if($field==$key && $key=='to') {
-                                                                $extraTo = $custom_values_array[$j];
-                                                            }
-                                                            else if($field==$key)
+                                                            if($field==$key)
                                                             {
+                                                                if($key=='to') {
+                                                                    $extraTo = $custom_values_array[$j];
+                                                                }
 														    	//if custom field is empty, use fallback
 														    	if($custom_values_array[$j]=='')
 																	$plain_treated = str_replace($tag, $fallback, $plain_treated);
