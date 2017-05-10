@@ -75,7 +75,7 @@
     foreach($custom_fields as $custom_field_and_value) {
         list($custom_field, $update_value) = explode('|', $custom_field_and_value);
         $index_update = array_search($custom_field, $custom_fields_structure_array);
-        if($index_update != false) {
+        if($index_update !== false) {
             $updates[$index_update] = $update_value;
         }
     }
