@@ -1114,6 +1114,7 @@
 				
 			    while($row = mysqli_fetch_array($r2))
 			    {
+			        unset($extraTo);
 			    	$subscriber_id = $row['id'];
 					$name = stripslashes($row['name']);
 					$email = stripslashes($row['email']);
