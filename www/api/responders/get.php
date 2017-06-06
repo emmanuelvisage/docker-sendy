@@ -54,10 +54,11 @@
 	
 	//-------------------------- QUERY --------------------------//
 	
-	$q = 'SELECT ares.list, ares.custom_field, ares.id, ares_e.time_condition, ares_e.from_email, ares_e.reply_to FROM ares INNER JOIN ares_emails AS ares_e WHERE ares_e.ares_id = ares.id AND list = '.$list_id;
+	$q = 'SELECT ares.list, ares.custom_field, ares.id, ares_e.time_condition, ares_e.from_email, ares_e.from_name, ares_e.reply_to, ares_e.title, ares_e.plain_text, ares_e.html_text FROM ares INNER JOIN ares_emails AS ares_e WHERE ares_e.ares_id = ares.id AND list = '.$list_id;
 	$r = mysqli_query($mysqli, $q);
-	if ($r && mysqli_num_rows($r) > 0)
+	if ($r)
 	{
+	    header('Content-Type: application/json');
 	    echo json_encode(mysqli_fetch_all($r,MYSQLI_ASSOC));
 	}
 	//-----------------------------------------------------------//
