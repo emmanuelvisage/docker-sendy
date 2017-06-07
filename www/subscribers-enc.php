@@ -9,10 +9,10 @@
     $qs = http_build_query($_GET);
 
     if( isset($_SERVER['HTTPS'] ) ) {
-      header('Location: https://'.$_SERVER['SERVER_NAME'].'/subscribers?'.$qs);
+      header('Location: https://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/subscribers?'.$qs);
     }
     else{
-      header('Location: http://'.$_SERVER['SERVER_NAME'].'/subscribers?'.$qs);
+      header('Location: http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/subscribers?'.$qs);
     }
 
 ?>
