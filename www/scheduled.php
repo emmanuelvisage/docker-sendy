@@ -246,33 +246,6 @@
 						$plain_treated = $plain_text;
 						$title_treated = $title;
 						
-						//replace new links on HTML code
-						$q2 = 'SELECT id, link FROM links WHERE campaign_id = '.$campaign_id;
-						$r2 = mysqli_query($mysqli, $q2);
-						if ($r2 && mysqli_num_rows($r2) > 0)
-						{			
-						    while($row2 = mysqli_fetch_array($r2))
-						    {
-						    	$linkID = $row2['id'];
-						    	if($query_string!='')
-						    	{
-							    	$link = (strpos($row2['link'],'?'.$query_string) !== false) ? str_replace('?'.$query_string, '', $row2['link']) : str_replace('&'.$query_string, '', $row2['link']);
-						    	}
-						    	else $link = $row2['link'];
-								
-								//If link tracking is enabled, replace links with trackable links
-								if($links_tracking)
-								{
-									//replace new links on HTML code
-							    	$html_treated = str_replace('href="'.$link.'"', 'href="'.APP_PATH.'/l/'.short($subscriber_id).'/'.short($linkID).'/'.short($campaign_id).'"', $html_treated);
-							    	$html_treated = str_replace('href=\''.$link.'\'', 'href="'.APP_PATH.'/l/'.short($subscriber_id).'/'.short($linkID).'/'.short($campaign_id).'"', $html_treated);
-							    	
-							    	//replace new links on Plain Text code
-							    	$plain_treated = str_replace($link, APP_PATH.'/l/'.short($subscriber_id).'/'.short($linkID).'/'.short($campaign_id), $plain_treated);
-							    }
-						    }  
-						}
-						
 						//tags for subject
 						preg_match_all('/\[([a-zA-Z0-9!#%^&*()+=$@._\-\:|\/?<>~`"\'\s]+),\s*fallback=/i', $title_treated, $matches_var, PREG_PATTERN_ORDER);
 						preg_match_all('/,\s*fallback=([a-zA-Z0-9!,#%^&*()+=$@._\-\:|\/?<>~`"\'\s]*)\]/i', $title_treated, $matches_val, PREG_PATTERN_ORDER);
@@ -319,7 +292,6 @@
 									    {
 										    $cf_array = explode(':', $custom_fields_array[$j]);
 										    $key = str_replace(' ', '', $cf_array[0]);
-										    
 										    //if tag matches a custom field
 										    if($field==$key)
 										    {
@@ -357,12 +329,13 @@
 						$matches_var = $matches_var[1];
 						$matches_val = $matches_val[1];
 						$matches_all = $matches_all[1];
+
 						for($i=0;$i<count($matches_var);$i++)
 						{   
 							$field = $matches_var[$i];
 							$fallback = $matches_val[$i];
 							$tag = $matches_all[$i];
-							
+
 							//if tag is Name
 							if($field=='Name')
 							{
@@ -393,7 +366,6 @@
 									    {
 										    $cf_array = explode(':', $custom_fields_array[$j]);
 										    $key = str_replace(' ', '', $cf_array[0]);
-										    
 										    //if tag matches a custom field
 										    if($field==$key)
 										    {
@@ -493,6 +465,33 @@
 								}
 							}
 						}
+
+                        //replace new links on HTML code
+                        $q2 = 'SELECT id, link FROM links WHERE campaign_id = '.$campaign_id;
+                        $r2 = mysqli_query($mysqli, $q2);
+                        if ($r2 && mysqli_num_rows($r2) > 0)
+                        {
+                            while($row2 = mysqli_fetch_array($r2))
+                            {
+                                $linkID = $row2['id'];
+                                if($query_string!='')
+                                {
+                                    $link = (strpos($row2['link'],'?'.$query_string) !== false) ? str_replace('?'.$query_string, '', $row2['link']) : str_replace('&'.$query_string, '', $row2['link']);
+                                }
+                                else $link = $row2['link'];
+
+                                //If link tracking is enabled, replace links with trackable links
+                                if($links_tracking)
+                                {
+                                    //replace new links on HTML code
+                                    $html_treated = str_replace('href="'.$link.'"', 'href="'.APP_PATH.'/l/'.short($subscriber_id).'/'.short($linkID).'/'.short($campaign_id).'"', $html_treated);
+                                    $html_treated = str_replace('href=\''.$link.'\'', 'href="'.APP_PATH.'/l/'.short($subscriber_id).'/'.short($linkID).'/'.short($campaign_id).'"', $html_treated);
+
+                                    //replace new links on Plain Text code
+                                    $plain_treated = str_replace($link, APP_PATH.'/l/'.short($subscriber_id).'/'.short($linkID).'/'.short($campaign_id), $plain_treated);
+                                }
+                            }
+                        }
 						
 						//set web version links
 				    	$html_treated = str_replace('<webversion', '<a href="'.APP_PATH.'/w/'.short($subscriber_id).'/'.short($subscriber_list).'/'.short($campaign_id).'" ', $html_treated);
