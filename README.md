@@ -3,7 +3,8 @@
 Inspired by :  https://github.com/svtek/Sendy-Docker
 
 I also externalized all mandatory variables as env variables to make it more docker friendly.
-I have had to modify the sendy config.php file to do that so keep in mind that if you use another version of sendy you will probably have to re-do these modifications and I can't guarantee that the php version and the loaded libraries will remain the same.
+
+**I had to modify the sendy config.php file to do that so keep in mind that if you use another version of sendy you will probably have to re-do these modifications and I can't guarantee that the php version and the loaded libraries will remain the same.**
 
 # Building the container
  Once you have setup the project run:  
@@ -62,6 +63,14 @@ And if you want to include it in your web application to be able to use Sendy 's
       - sendy
 ```
 
+# Initialize your DB with some data
+
+If you have to load your sendy database with some pre-loaded data you can use the following ENV Variable :
+```
+SENDY_BASE_DATA_FILE
+```
+If this variable is present and you have mounted a sql file to this path, every time you launch ```init.sh``` the database will be dropped and created again and your data will be loaded 
+
 # Amazon ECS
 I've done all that to be able to deploy it instantly using amazon ECS, there is only one necessary step missing here. 
 Since ECS doesn't support build you'll have to build the image and host it somewhere and replace the build line in docker compose by your image like :
@@ -107,3 +116,12 @@ I know how annoying it can be to not be able to test Sendy in local and the prov
 1. Go to 238238736_sendy.my_domain.com, you can now test locally without having to check your IP and modify your A record all the time.
 
 If you have more than one developer make the SENDY_PATH a variable on your machine and add as many CNAME records as you have developers.
+
+# When developing receive every emails on a specific email address
+**Warning : I ve had to modify Sendy files for that wo it won't work if you update your version.**
+
+```
+SENDY_ENV: development
+SENDY_LOCAL_EMAIL_TO : ${LOCAL_EMAIL_TO} // I ve done that because my local email is set as a env var on my host machine but you can replace with any email address.
+```
+

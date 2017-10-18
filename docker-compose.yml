@@ -21,3 +21,5 @@ services:
       MYSQL_DATABASE: sendy_db
       MYSQL_PORT : 3306
       SENDY_PATH : http://sendy.my_domain.com
+      SENDY_ENV : development
+      SENDY_LOCAL_EMAIL_TO : ${LOCAL_EMAIL_TO}

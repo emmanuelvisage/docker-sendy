@@ -5,6 +5,7 @@ cd "$parent_path"
 
 mysql --host=mysql --port=$MYSQL_PORT --user=root --password=$MYSQL_ROOT_PASSWORD -e "DROP DATABASE ${MYSQL_DATABASE};"
 mysql --host=mysql --port=$MYSQL_PORT --user=root --password=$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE ${MYSQL_DATABASE};"
-mysql --host=mysql --port=$MYSQL_PORT --user=root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < ./data/sendy_table_structure.sql
-mysql --host=mysql --port=$MYSQL_PORT --user=root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < ./data/sendy_base_data.sql
-mysql --host=mysql --port=$MYSQL_PORT --user=root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < ./data/sendy_users_$SENDY_ENV.sql
+
+if [ -n "$SENDY_BASE_DATA_FILE" ]; then
+    mysql --host=mysql --port=$MYSQL_PORT --user=root --password=$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < $SENDY_BASE_DATA_FILE
+fi

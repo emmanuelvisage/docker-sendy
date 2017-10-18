@@ -13,7 +13,7 @@
 	$dbName = getenv('MYSQL_DATABASE'); //MySQL Database Name
 
 	$environment = getenv('SENDY_ENV');
-	$testEmail = getenv('SENDY_LOCAL_EMAIL_TO') ?: 'test@visage.jobs';
+	$testEmail = getenv('SENDY_LOCAL_EMAIL_TO');
 	
 	//----------------------------------------------------------------------------------//	
 	//								  OPTIONAL SETTINGS
