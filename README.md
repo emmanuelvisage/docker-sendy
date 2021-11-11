@@ -1,3 +1,5 @@
+**VERY OLD, probably not running the version of Sendy you want to run. And not maintained anymore **
+
 **This is a Docker container with a full installation of Sendy 2.1.2.7 with everything set-up (permissions, apache, cron, php-curl, php-xml, etc) auto-responders will be enabled as well.**
 
 Inspired by :  https://github.com/svtek/Sendy-Docker
